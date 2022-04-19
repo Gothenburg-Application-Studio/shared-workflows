@@ -7,9 +7,6 @@ on:
         required: false
         type: string
         default: "./"
-      common-dotenv:
-        required: true
-        type: string
     secrets:
       font_awesome_ssh:
         required: true
@@ -43,7 +40,6 @@ jobs:
         with:
           channel: "stable"
       - run: echo ${{secrets.dotenv}} | base64 -d > dotenv
-      - run: echo ${{secrets.dotenv}} | base64 -d > ${{inputs.common-dotenv}}
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test --coverage
