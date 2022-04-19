@@ -1,0 +1,49 @@
+name: Flutter test and analysis
+
+on:
+  workflow_call:
+    inputs:
+      directory:
+        required: false
+        type: string
+        default: "./"
+      common-dotenv:
+        required: true
+        type: string
+    secrets:
+      font_awesome_ssh:
+        required: true
+      raster_systeme_ssh:
+        required: true
+      dotenv:
+        required: true
+      codecov_token:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{inputs.directory}}
+    steps:
+      - uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: |
+            ${{secrets.raster_systeme_ssh}}
+            ${{secrets.font_awesome_ssh}}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: echo ${{secrets.dotenv}} | base64 -d > dotenv
+      - run: echo ${{secrets.dotenv}} | base64 -d > ${{inputs.common-dotenv}}
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test --coverage
+      - uses: codecov/codecov-action@v2.1.0  
+        with:
+          token: ${{secrets.codecov_token}}
