@@ -15,6 +15,8 @@ on:
         required: true
       raster_systeme_ssh:
         required: true
+      flutter_common:
+        required: false
       dotenv:
         required: true
       codecov_token:
@@ -32,6 +34,7 @@ jobs:
           ssh-private-key: |
             ${{secrets.raster_systeme_ssh}}
             ${{secrets.font_awesome_ssh}}
+            ${{secrets.flutter_common}}
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
@@ -47,3 +50,4 @@ jobs:
       - uses: codecov/codecov-action@v2.1.0  
         with:
           token: ${{secrets.codecov_token}}
+
