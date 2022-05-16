@@ -41,6 +41,7 @@ jobs:
           channel: "stable"
       - run: echo ${{secrets.dotenv}} | base64 -d > dotenv
       - run: flutter pub get
+      - run: dart fix --apply
       - run: flutter analyze
       - run: flutter test --coverage
       - uses: codecov/codecov-action@v2.1.0  
